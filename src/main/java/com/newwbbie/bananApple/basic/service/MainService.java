@@ -1,4 +1,4 @@
-package com.newwbbie.bananApple.Service;
+package com.newwbbie.bananApple.basic.service;
 
 import org.springframework.stereotype.Service;
 

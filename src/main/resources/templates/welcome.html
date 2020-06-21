@@ -9,22 +9,61 @@
 <body>
     <div class="layui-header header header-doc">
         <div class="layui-main">
-            <a class="logo" href="/">
-                <img src="images/bananApple.png" alt="bananApple">
+            <a class="logo" href="/welcome">
+                <img src="/images/bananApple.png" alt="bananApple">
             </a>
-            <h1>欢迎来到魏斌的小站</h1>
+            <p style="color: white; padding-left: 120px; padding-top: 15px; font-size: 22px">香蕉&苹果</p>
             <ul class="layui-nav">
-                <li class="layui-nav-item ">吉他谱</li>
+                <li class="layui-nav-item "><a href="">吉他谱</a></li>
+                <li class="layui-nav-item "><a href="">笔记</a></li>
+                <li class="layui-nav-item "><a href="">照片</a></li>
+                <li class="layui-nav-item "><a href="">AHK</a></li>
+                <li class="layui-nav-item "><a href="">爬虫</a></li>
+                <li class="layui-nav-item ">
+                    <a href="javascript:;">有意思的网站<span class="layui-nav-more"></span></a>
+                    <dl class="layui-nav-child layui-anim layui-anim-upbit" style="left: auto; text-align: center;">
+                        <dd lay-unselect="">
+                            <a href="http://www.dililitv.com/" target="_blank">嘀哩哩</a>
+                        </dd>
+                        <dd lay-unselect="">
+                            <a href="https://www.965ys.net/" target="_blank">965影视</a>
+                        </dd>
+                    </dl>
+                </li>
             </ul>
+        </div>
+    </div>
+
+    <div class="site-banner">
+        <div class="site-banner-bg" style="background-image: url(images/ys.jpg); background-size: cover;"></div>     <!--https://api.xygeng.cn/Bing/-->
+        <div class="site-banner-main">
+            <div class="site-zfj site-zfj-anim">
+                <i class="layui-icon" style="color: #fff; color: rgba(255,255,255,.7);"></i>
+            </div>
+            <div class="layui-anim site-desc site-desc-anim">
+                <p class="web-font-desc">正在建设中...</p>
+                <cite>请耐心等待</cite>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer footer footer-index">
+        <div class="layui-main">
+            <p>如何找到我</p>
+            <p>
+                <a>QQ</a>
+                <a>微信</a>
+                <a href="https://github.com/Newbiei/bananApple" target="_blank" rel="nofollow">GitHub</a>
+                <a href="" target="_blank" rel="nofollow">码云</a>
+            </p>
         </div>
     </div>
 
     <script src="layui/layui.js"></script>
     <script>
-        //一般直接写在一个js文件中
-        layui.use(['layer', 'element'], function(){
-            let layer = layui.layer,
-                element = layui.element;
+        layui.use('element', function(){
+            var element = layui.element;
+
         });
     </script>
 </body>

@@ -8,7 +8,7 @@
 		<version>2.1.1.RELEASE</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.newwbbie</groupId>
+	<groupId>com</groupId>
 	<artifactId>bananApple</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>bananApple</name>

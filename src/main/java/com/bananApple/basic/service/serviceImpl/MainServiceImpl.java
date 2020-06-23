@@ -1,8 +1,7 @@
-package com.newwbbie.bananApple.basic.service.serviceImpl;
+package com.bananApple.basic.service.serviceImpl;
 
-import com.newwbbie.bananApple.basic.dao.MainDao;
-import com.newwbbie.bananApple.basic.service.MainService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bananApple.basic.service.MainService;
+import com.bananApple.basic.dao.MainDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

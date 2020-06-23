@@ -1,4 +1,4 @@
-package com.newwbbie.bananApple.basic.dao;
+package com.bananApple.basic.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 

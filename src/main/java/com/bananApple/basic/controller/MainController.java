@@ -1,6 +1,6 @@
-package com.newwbbie.bananApple.basic.controller;
+package com.bananApple.basic.controller;
 
-import com.newwbbie.bananApple.basic.service.MainService;
+import com.bananApple.basic.service.MainService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

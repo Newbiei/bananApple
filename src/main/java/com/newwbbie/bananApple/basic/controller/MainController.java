@@ -3,6 +3,7 @@ package com.newwbbie.bananApple.basic.controller;
 import com.newwbbie.bananApple.basic.service.MainService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -15,5 +16,11 @@ public class MainController {
     @RequestMapping("/welcome")
     public String welcome () {
         return "welcome";
+    }
+
+    @ResponseBody
+    @RequestMapping("/getInfo")
+    public String getInfo () {
+        return mainService.getInfo();
     }
 }

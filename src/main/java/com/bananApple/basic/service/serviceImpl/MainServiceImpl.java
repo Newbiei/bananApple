@@ -5,6 +5,7 @@ import com.bananApple.basic.dao.MainDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("MainService")
 public class MainServiceImpl implements MainService {
@@ -15,5 +16,10 @@ public class MainServiceImpl implements MainService {
     @Override
     public String getInfo() {
         return mainDao.getInfo();
+    }
+
+    @Override
+    public List getUUEInfo() {
+        return mainDao.getUUEInfo();
     }
 }

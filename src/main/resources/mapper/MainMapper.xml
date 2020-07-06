@@ -5,4 +5,8 @@
     <select id="getInfo" resultType="String">
         select staff_name from yw_staff where staff_id = 1
     </select>
+
+    <select id="getUUEInfo" resultType="map">
+        select * from (select price, DATE_FORMAT(date, '%m-%d %H:%i') date from uustone where name = "崇高石" order by date desc) t order by date
+    </select>
 </mapper>

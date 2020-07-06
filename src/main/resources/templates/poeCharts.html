@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>通货图表</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/mLayui.css">
+</head>
+<body>
+    <div class="layui-header header header-doc">
+        <div class="layui-main">
+            <a class="logo" href="/welcome">
+                <img src="/images/bananApple.png" alt="bananApple">
+            </a>
+            <p style="color: white; padding-left: 120px; padding-top: 15px; font-size: 22px">香蕉&苹果</p>
+            <ul class="layui-nav">
+                <li class="layui-nav-item "><a href="">吉他谱</a></li>
+                <li class="layui-nav-item "><a href="">笔记</a></li>
+                <li class="layui-nav-item layui-this"><a href="/poeCharts">poe爬虫</a></li>
+                <li class="layui-nav-item ">
+                    <a href="javascript:;">有意思的网站<span class="layui-nav-more"></span></a>
+                    <dl class="layui-nav-child layui-anim layui-anim-upbit" style="left: auto; text-align: center;">
+                        <dd lay-unselect="">
+                            <a href="http://www.dililitv.com/" target="_blank">嘀哩哩</a>
+                        </dd>
+                        <dd lay-unselect="">
+                            <a href="https://www.965ys.net/" target="_blank">965影视</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main" style="width: 100%;height:600px;"></div>
+
+    <script src="js/echarts.min.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="layui/layui.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                position: function (pt) {
+                    return [pt[0], '10%'];
+                }
+            },
+            title: {
+                left: 'center',
+                text: '崇高石价格[来自UU]',
+            },
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%']
+            },
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end: 10
+            }, {
+                start: 0,
+                end: 10,
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                handleSize: '80%',
+                handleStyle: {
+                    color: '#fff',
+                    shadowBlur: 3,
+                    shadowColor: 'rgba(0, 0, 0, 0.6)',
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2
+                }
+            }],
+            series: [
+                {
+                    name: '崇高石',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    sampling: 'average',
+                    itemStyle: {
+                        color: 'rgb(70,196,255)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(68,255,152)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(70,196,255)'
+                        }])
+                    },
+                    data: []
+                }
+            ]
+        };
+        myChart.setOption(option);
+
+        myChart.showLoading();
+
+        var date = [];
+        var data = [];
+
+        $.ajax({
+            type : "get",
+            async : true,
+            url : "/getUUEInfo",
+            success : function(result) {
+                if (result) {
+                    for (i = 0; i < result.length; i++) {
+                        data.push(result[i].price);
+                        date.push(result[i].date);
+                    }
+
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({       //加载数据图表
+                        xAxis: {
+                            data: date
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '崇高石',
+                            data: data
+                        }]
+                    });
+                }
+            },
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        });
+    </script>
+</body>
+</html>

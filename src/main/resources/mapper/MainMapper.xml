@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bananApple.basic.dao.MainDao">
 
-    <select id="getInfo" resultType="String">
-        select staff_name from yw_staff where staff_id = 1
+    <select id="getInfo" parameterType="String" resultType="String">
+        select DATE_FORMAT(finish_date,'%Y-%m-%d') from ahk_info where name = #{name}
     </select>
 
     <select id="getUUEInfo" resultType="map">

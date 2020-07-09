@@ -6,7 +6,7 @@ import java.util.List;
 
 @Mapper
 public interface MainDao {
-    String getInfo();
+    String getInfo(String name);
 
     List getUUEInfo();
 }

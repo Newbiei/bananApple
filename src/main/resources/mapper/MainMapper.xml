@@ -3,10 +3,10 @@
 <mapper namespace="com.bananApple.basic.dao.MainDao">
 
     <select id="getInfo" parameterType="String" resultType="String">
-        select DATE_FORMAT(finish_date,'%Y-%m-%d') from ahk_info where name = #{name}
+        select status from ahk_info where name = #{name}
     </select>
 
     <select id="getUUEInfo" resultType="map">
-        select * from (select price, DATE_FORMAT(date, '%m-%d %H:%i') date from uustone where name = "崇高石" order by date desc) t order by date
+        select * from (select price, DATE_FORMAT(date, '%m-%d %H:%i') date from uustone where name = "崇高石" order by date desc limit 5000) t order by date
     </select>
 </mapper>

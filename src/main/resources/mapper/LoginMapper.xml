@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bananApple.system.dao.LoginDao">
+
+    <resultMap id="UserResult" type="UserInfo">
+        <result property="id" column="STAFF_ID" />
+        <result property="username" column="STAFF_NO" />
+        <result property="password" column="STAFF_PASS" />
+    </resultMap>
+
+    <!-- 登录 -->
+    <select id="login" parameterType="map" resultType="map">
+	    SELECT * FROM staff t where t.staff_no = #{username} and t.staff_pass = #{password} and t.status = 0
+    </select>
+
+    <!-- Shiro验证用 -->
+    <select id="selectUserInfoByUsername" parameterType="String" resultType="UserResult">
+        SELECT * FROM staff t where t.staff_no = #{username} and t.status = 0
+    </select>
+</mapper>

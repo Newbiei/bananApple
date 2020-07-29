@@ -9,25 +9,16 @@
 <body>
     <section id="main">
         <h1>登 录</h1>
-<!--        <form id="login_form" action="javascript:;" accept-charset="utf-8">-->
-<!--            <div class="clearfix">-->
-<!--                <input type="text" id="username" name="" placeholder="输入帐号">-->
-<!--            </div>-->
-<!--            <div class="clearfix">-->
-<!--                <input type="password" id="password" name="" placeholder="输入密码">-->
-<!--            </div>-->
-<!--            <div class="clearfix btn_login">-->
-<!--                <input type="submit" value="登 录" onclick="login()">-->
-<!--            </div>-->
-<!--        </form>-->
-        <form class="layui-form" method="post">
-            <div class="layui-form-item">
-                <input class="layui-input" name="username" placeholder="用户名" type="text" autocomplete="off"/>
+        <form id="login_form"  method="post">
+            <div class="clearfix">
+                <input type="text" id="username" name="username" placeholder="输入帐号">
             </div>
-            <div class="layui-form-item">
-                <input class="layui-input" name="password" placeholder="密码" type="password" autocomplete="off"/>
+            <div class="clearfix">
+                <input type="password" id="password" name="password" placeholder="输入密码">
             </div>
-            <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>
+            <div class="clearfix btn_login">
+                <input type="submit" value="登 录">
+            </div>
         </form>
     </section>
 
@@ -35,36 +26,10 @@
 <script src="js/jquery-3.1.1.min.js"></script>
 <script src="layui/layui.js"></script>
 <script type="text/javascript">
-    function login() {
-        var username = $('#username').val();
-        var password = $('#password').val();
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "/log?username=" + username + "&password=" + password,
-            async: false,
-            success: function (result) {
-                if (result.resultCode == 200) {
-                    window.location.href = "/index";
-                } else {
-                    layui.use('layer', function(){
-                        var layer = layui.layer;
-                        layer.msg('用户名或密码不正确');
-                    });
-                }
-            },
-            error : function() {
-                layui.use('layer', function(){
-                    var layer = layui.layer;
-                    layer.msg('登录异常');
-                });
-            }
-        });
-    }
 
     layui.use(['layer'], function() {
         var layer = layui.layer;
-        var message = [[${shiroLoginFailure}]]?[[${shiroLoginFailure}]]:getUrlPara("shiroLoginFailure");
+        var message = '[[${shiroLoginFailure}]]' ? '[[${shiroLoginFailure}]]' : getUrlPara("shiroLoginFailure");
         if(message) {
             layer.msg(message);
         }

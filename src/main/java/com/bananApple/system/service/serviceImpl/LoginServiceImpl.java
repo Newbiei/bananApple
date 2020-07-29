@@ -1,7 +1,7 @@
 package com.bananApple.system.service.serviceImpl;
 
 import com.bananApple.system.dao.LoginDao;
-import com.bananApple.system.model.UserInfo;
+import com.bananApple.system.entity.UserInfo;
 import com.bananApple.system.service.LoginService;
 import com.bananApple.util.CipherUtil;
 import org.springframework.stereotype.Service;

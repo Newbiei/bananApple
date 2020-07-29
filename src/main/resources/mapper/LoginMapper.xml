@@ -14,7 +14,7 @@
     </select>
 
     <!-- Shiro验证用 -->
-    <select id="selectUserInfoByUsername" parameterType="String" resultType="UserResult">
+    <select id="selectUserInfoByUsername" parameterType="String" resultMap="UserResult">
         SELECT * FROM staff t where t.staff_no = #{username} and t.status = 0
     </select>
 </mapper>

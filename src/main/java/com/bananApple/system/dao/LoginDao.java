@@ -1,6 +1,6 @@
 package com.bananApple.system.dao;
 
-import com.bananApple.system.model.UserInfo;
+import com.bananApple.system.entity.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Map;

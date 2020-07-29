@@ -1,9 +1,15 @@
 package com.bananApple.system.controller;
 
 import com.bananApple.system.service.LoginService;
+import com.bananApple.util.CipherUtil;
 import net.sf.json.JSONObject;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
@@ -23,13 +29,19 @@ public class LoginController {
         return "/system/login";
     }
 
-    @RequestMapping("/log")
-    public String log (HttpServletRequest request) {
-        Map<String, Object> result = loginService.login(request);
-        if (result.get("resultCode").toString() == "200") {
-            return "/system/index";
-        } else {
-            return "404";
-        }
+    @RequestMapping("/index")
+    public String index () {
+        return "/system/index";
     }
+
+//    @PostMapping("/login")
+//    public Object login (String username, String password, Model model) {
+//        Subject user = SecurityUtils.getSubject();
+//        CipherUtil cipher = new CipherUtil();
+//        password = cipher.generatePassword(password);
+//        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+//
+//        user.login(token);
+//        return "redirect:/index";
+//    }
 }

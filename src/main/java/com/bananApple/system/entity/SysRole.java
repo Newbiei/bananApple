@@ -1,4 +1,4 @@
-package com.bananApple.system.model;
+package com.bananApple.system.entity;
 
 public class SysRole {
     private String id;

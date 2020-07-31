@@ -186,7 +186,7 @@ li {
 	padding: 46px 80px;
 	position: relative;
 	left: 50%;
-	top: 108px;
+	top: 100px;
 	margin: 0 0 108px -233px;
 	z-index: 2
 }
@@ -262,14 +262,14 @@ only screen and (min-resolution:2dppx) {
 	font-size: 16px;
 	text-align: center;
 	background: #3dca99;
-	-webkit-border-radius: 23px;
-	-moz-border-radius: 23px;
-	border-radius: 23px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 	margin: 18px 0
 }
 
 #main .btn_login {
-	border-bottom: 1px solid #e3e4e5
+	/*border-bottom: 1px solid #e3e4e5*/
 }
 
 #main .autologin {

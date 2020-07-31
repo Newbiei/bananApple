@@ -1,9 +1,12 @@
 package com.bananApple.shiro;
 
+import com.bananApple.system.entity.SysMenu;
+import com.bananApple.system.entity.SysRole;
 import com.bananApple.system.entity.UserInfo;
 import com.bananApple.system.service.LoginService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -20,18 +23,17 @@ public class MyShiroRealm extends AuthorizingRealm {
     // 权限授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-//        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-//        UserInfo userInfo  = (UserInfo)principals.getPrimaryPrincipal();
-//        for(SysRole sysRole : loginService.findSysRoleListByUsername(userInfo.getUsername())){
-//            authorizationInfo.addRole(sysRole.getRoleName());
-//            logger.info(sysRole.toString());
-//            for(SysPermission sysPermission : loginService.findSysPermissionListByRoleId(sysRole.getId())){
-//                logger.info(sysPermission.toString());
-//                authorizationInfo.addStringPermission(sysPermission.getUrl());
-//            }
-//        };
-//        return authorizationInfo;
-        return null;
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        UserInfo userInfo  = (UserInfo) principals.getPrimaryPrincipal();
+        for(SysRole sysRole : loginService.findSysRoleListByUsername(userInfo.getUsername())) {
+            authorizationInfo.addRole(sysRole.getRoleName());
+            logger.info(sysRole.toString());
+            for(SysMenu sysMenu : loginService.findSysPermissionListByRoleId(sysRole.getRoleId())) {
+                logger.info(sysMenu.toString());
+                authorizationInfo.addStringPermission(sysMenu.getUrl());
+            }
+        }
+        return authorizationInfo;
     }
 
     // 主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。
@@ -44,7 +46,6 @@ public class MyShiroRealm extends AuthorizingRealm {
         if (userInfo == null) {
             throw new UnknownAccountException("账户不存在!");
         }
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(), ByteSource.Util.bytes(userInfo.getUsername()), getName());
-        return simpleAuthenticationInfo;
+        return new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(), ByteSource.Util.bytes(userInfo.getUsername()), getName());
     }
 }

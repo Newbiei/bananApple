@@ -8,13 +8,66 @@
         <result property="password" column="STAFF_PASS" />
     </resultMap>
 
-    <!-- 登录 -->
-    <select id="login" parameterType="map" resultType="map">
-	    SELECT * FROM staff t where t.staff_no = #{username} and t.staff_pass = #{password} and t.status = 0
+    <resultMap id="RoleResult" type="SysRole">
+        <result property="roleId" column="ROLE_ID" />
+        <result property="roleName" column="ROLE_NAME" />
+    </resultMap>
+
+    <resultMap id="MenuResult" type="SysMenu">
+        <result property="menuId" column="MENU_ID" />
+        <result property="parentMenuId" column="PARENT_MENU_ID" />
+        <result property="menuLevel" column="MENU_LEVEL" />
+        <result property="menuName" column="MENU_NAME" />
+        <result property="url" column="URL" />
+    </resultMap>
+
+    <!-- 通过用户名查找用户 -->
+    <select id="selectUserInfoByUsername" parameterType="String" resultMap="UserResult">
+        SELECT * FROM aa_staff t where t.staff_no = #{username} and t.status = 0 limit 1
     </select>
 
-    <!-- Shiro验证用 -->
-    <select id="selectUserInfoByUsername" parameterType="String" resultMap="UserResult">
-        SELECT * FROM staff t where t.staff_no = #{username} and t.status = 0
+    <!-- 通过用户名查找角色列表-->
+    <select id="findSysRoleListByUsername" parameterType="String" resultMap="RoleResult">
+        SELECT
+            *
+        FROM
+            aa_role r
+            LEFT JOIN aa_staff_2_role sr ON sr.role_id = r.role_id
+            LEFT JOIN aa_staff s ON s.staff_id = sr.staff_id
+        WHERE
+            s.staff_no = #{username}
+            AND r.status = 0
+    </select>
+
+    <!-- 查找某角色的权限列表 -->
+    <select id="findSysPermissionListByRoleId" parameterType="String" resultMap="MenuResult">
+        SELECT
+            *
+        FROM
+            aa_menu m
+            LEFT JOIN aa_role_2_menu rm ON rm.menu_id = m.menu_id
+        WHERE
+            rm.role_id = #{id}
+            AND m.STATUS = 0
+    </select>
+
+    <!-- 获取菜单列表 -->
+    <select id="getMenuList" parameterType="map" resultMap="MenuResult">
+        SELECT DISTINCT
+            m.menu_id,
+            m.parent_menu_id,
+            m.menu_level,
+            m.menu_name,
+            m.url
+        FROM
+            aa_staff s
+            LEFT JOIN aa_staff_2_role sr ON sr.staff_id = s.staff_id
+            LEFT JOIN aa_role_2_menu rm ON rm.role_id = sr.role_id
+            LEFT JOIN aa_menu m ON m.menu_id = rm.menu_id
+        WHERE
+            s.staff_no = #{username}
+            AND m.STATUS = 0
+        ORDER BY
+            m.menu_id
     </select>
 </mapper>

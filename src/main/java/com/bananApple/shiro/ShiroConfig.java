@@ -23,7 +23,7 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(securityManager);
 
@@ -34,8 +34,8 @@ public class ShiroConfig {
         map.put("/welcome", "anon");
         map.put("/poeCharts", "anon");
         map.put("/getUUEInfo", "anon");
-        map.put("/system/login", "anon");
 
+        map.put("/static/**", "anon");
         map.put("/bootstrap-3.3.7/**", "anon");
         map.put("/css/**", "anon");
         map.put("/images/**", "anon");
@@ -78,7 +78,7 @@ public class ShiroConfig {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
         hashedCredentialsMatcher.setHashAlgorithmName("md5");
         //散列的次数
-        hashedCredentialsMatcher.setHashIterations(3);
+        hashedCredentialsMatcher.setHashIterations(2);
         return hashedCredentialsMatcher;
     }
 
@@ -90,10 +90,10 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager(@Qualifier("myShiroRealm") MyShiroRealm myShiroRealm) {
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm);
-//        // 注入记住我管理器
-//        securityManager.setRememberMeManager(rememberMeManager());
-//        // 注入ehCache管理器
-//        securityManager.setCacheManager(ehCacheManager());
+        // 注入记住我管理器
+        securityManager.setRememberMeManager(rememberMeManager());
+        // 注入ehCache管理器
+        securityManager.setCacheManager(ehCacheManager());
         // 注入session管理器
         securityManager.setSessionManager(configWebSessionManager());
         return securityManager;

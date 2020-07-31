@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     private static final Logger logger = LoggerFactory.getLogger(MyFormAuthenticationFilter.class);
@@ -35,7 +34,6 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
             logger.info("对用户[{}]进行登录验证..验证未通过,未知错误", userName);
             message = "用户名或密码不正确";
         } else{
-            logger.info("对用户[{}]进行登录验证..验证通过", userName);
             message = className;
         }
         request.setAttribute(getFailureKeyAttribute(), message);

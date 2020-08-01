@@ -37,6 +37,11 @@ public class MainController {
         return "poeCharts";
     }
 
+    @RequestMapping("/markdown")
+    public String markdown () {
+        return "markdown";
+    }
+
     @ResponseBody
     @RequestMapping("/getInfo")
     public String getInfo (HttpServletRequest request) {

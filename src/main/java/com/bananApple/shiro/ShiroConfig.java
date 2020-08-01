@@ -35,6 +35,7 @@ public class ShiroConfig {
         map.put("/poeCharts", "anon");
         map.put("/getUUEInfo", "anon");
         map.put("/system/**", "anon");
+        map.put("/error/**", "anon");
 
         map.put("/static/**", "anon");
         map.put("/bootstrap-3.3.7/**", "anon");

@@ -1,11 +1,15 @@
 package com.bananApple.shiro.filter;
 
 import org.apache.shiro.authc.*;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     private static final Logger logger = LoggerFactory.getLogger(MyFormAuthenticationFilter.class);
@@ -37,5 +41,17 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
             message = className;
         }
         request.setAttribute(getFailureKeyAttribute(), message);
+    }
+
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
+        // 1.获取sesssion
+        Session session = subject.getSession(false);
+        if (session != null) {
+            // 清除shiro共享的上一次地址 ://shiroSavedRequest
+            session.removeAttribute(WebUtils.SAVED_REQUEST_KEY);
+        }
+
+        return super.onLoginSuccess(token, subject, request, response);
     }
 }

@@ -44,6 +44,7 @@ public class ShiroConfig {
         map.put("/js/**", "anon");
         map.put("/layuiAdmin/**", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
+        map.put("/favicon.ico","anon");
         map.put("/logout", "logout");
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问;
         // user:认证通过或者记住了登录状态(remeberMe)则可以通过

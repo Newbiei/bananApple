@@ -28,11 +28,11 @@ public class MyUtil {
     }
 
     public static void main(String[] args) {
-//        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-//        textEncryptor.setPassword("newwbbie");
-//        String password = textEncryptor.encrypt("wb382014");
-//
-//        System.out.println("加密:" + password);
-//        System.out.println("解密:" + textEncryptor.decrypt(password));
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword("newwbbie");
+        String password = textEncryptor.encrypt("");
+
+        System.out.println("加密:" + password);
+        System.out.println("解密:" + textEncryptor.decrypt(password));
     }
 }

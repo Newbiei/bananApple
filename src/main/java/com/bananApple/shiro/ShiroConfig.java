@@ -34,15 +34,12 @@ public class ShiroConfig {
         map.put("/welcome", "anon");
         map.put("/poeCharts", "anon");
         map.put("/getUUEInfo", "anon");
-        map.put("/system/**", "anon");
-        map.put("/error/**", "anon");
 
-        map.put("/static/**", "anon");
-        map.put("/bootstrap-3.3.7/**", "anon");
         map.put("/css/**", "anon");
         map.put("/images/**", "anon");
         map.put("/js/**", "anon");
         map.put("/layuiAdmin/**", "anon");
+        map.put("/layuimini/**", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         map.put("/favicon.ico","anon");
         map.put("/logout", "logout");

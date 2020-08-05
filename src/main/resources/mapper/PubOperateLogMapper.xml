@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springBootAdmin.system.dao.PubOperateLogDao">
+
+	<resultMap id="BaseResultMap" type="com.springBootAdmin.system.entity.PubOperateLog">
+		<id column="OPERATE_ID" property="operateId" jdbcType="DECIMAL" />
+		<result column="STAFF_ID" property="staffId" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" />
+		<result column="MENU" property="menu" jdbcType="VARCHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="OPERATE_TYPE" property="operateType" jdbcType="DECIMAL" />
+		<result column="OPERATE_TYPE_NAME" property="pubOperateType.operateTypeName" jdbcType="VARCHAR" />
+		<result column="OPERATE_STATUS" property="operateStatus" jdbcType="DECIMAL" />
+		<result column="PHY_EQP_ID" property="deviceid" jdbcType="DECIMAL" />
+		<result column="PHY_EQP_NAME" property="deviceName" jdbcType="VARCHAR" />
+		<result column="NOTES" property="notes" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 操作类型结果集 -->
+	<resultMap id="OperateType" type="com.springBootAdmin.system.entity.PubOperateType">
+		<result column="OPERATE_TYPE" property="operateType" jdbcType="DECIMAL" />
+		<result column="OPERATE_TYPE_NAME" property="operateTypeName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		OPERATE_ID, STAFF_ID, SOURCE, MENU, START_DATE, END_DATE, OPERATE_TYPE,
+		OPERATE_STATUS,PHY_EQP_ID,NOTES
+	</sql>
+	
+	<sql id="allFieldsForEqp">
+		P.OPERATE_ID,S.NAME,P.SOURCE,P.MENU,P.START_DATE,P.END_DATE,P.OPERATE_TYPE,P.OPERATE_STATUS,L.OPERATE_TYPE_NAME,P.PHY_EQP_ID,E.NAME
+		as PHY_EQP_NAME,P.NOTES
+	</sql>
+	
+	<sql id="allFields">
+		P.OPERATE_ID,S.NAME,P.SOURCE,P.MENU,P.START_DATE,P.END_DATE,P.OPERATE_TYPE,P.OPERATE_STATUS,L.OPERATE_TYPE_NAME,P.NOTES
+	</sql>
+
+	<!-- 查询操作日志分页列表 -->
+	<select id="getListByPage" resultMap="BaseResultMap">
+		SELECT
+		<include refid="allFields" />
+		FROM GLCS_OPERATE_LOG P,GLCS_STAFF S,GLCS_OPERATE_TYPE L
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			P.STAFF_ID = S.STAFF_ID AND P.OPERATE_TYPE = L.OPERATE_TYPE
+			and P.OPERATE_TYPE not in
+			(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+			<if test="bean.model.name != null and bean.model.name !=''">
+				AND S.NAME LIKE '%'|| #{bean.model.name} ||'%'
+			</if>
+			<if test="bean.model.source != null and bean.model.source !=''">
+				AND P.SOURCE = #{bean.model.source}
+			</if>
+			<if test="bean.model.menu != null and bean.model.menu !=''">
+				AND P.MENU like '%'|| #{bean.model.menu} ||'%'
+			</if>
+			<if
+				test="bean.queryStartDateStr != null and bean.queryStartDateStr !=''">
+			 <![CDATA[ 	AND P.START_DATE >= TO_DATE(#{bean.queryStartDateStr},'yyyy-MM-dd hh24:mi:ss')]]>
+			</if>
+			<if
+				test="bean.queryEndDateStr != null and bean.queryEndDateStr !=''">
+			 <![CDATA[ 	AND P.END_DATE <= TO_DATE(#{bean.queryEndDateStr},'yyyy-MM-dd hh24:mi:ss')]]>
+			</if>
+			<if
+				test="bean.model.pubOperateType.operateTypeName != null and bean.model.pubOperateType.operateTypeName !='' and bean.model.pubOperateType.operateTypeName !='-1'">
+				AND L.OPERATE_TYPE = #{bean.model.pubOperateType.operateTypeName}
+			</if>
+			<if
+				test="bean.model.operateStatus != null and bean.model.operateStatus !='' and bean.model.operateStatus !='-1'">
+				AND P.OPERATE_STATUS = #{bean.model.operateStatus}
+			</if>
+		</trim>
+		<if test="bean.sort != null and bean.sort != '' and bean.dir != null and bean.dir != ''">
+			<trim prefix="ORDER BY">
+			<![CDATA[${bean.sort} ${bean.dir}]]>
+			</trim>
+		</if>
+	</select>
+
+	<!-- 查询设备操作日志分页列表 -->
+	<select id="getEqpOperateListByPage" resultMap="BaseResultMap">
+		SELECT
+		<include refid="allFieldsForEqp" />
+		FROM GLCS_OPERATE_LOG P
+		JOIN GLCS_STAFF S ON P.STAFF_ID = S.STAFF_ID
+		JOIN GLCS_OPERATE_TYPE L ON P.OPERATE_TYPE = L.OPERATE_TYPE
+		left join PHY_EQUIPMENT E on E.PHY_EQP_ID = P.PHY_EQP_ID
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			P.OPERATE_TYPE in
+			(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+			<if test="bean.model.name != null and bean.model.name !=''">
+				AND S.NAME LIKE '%'|| #{bean.model.name} ||'%'
+			</if>
+			<if test="bean.model.source != null and bean.model.source !=''">
+				AND P.SOURCE = #{bean.model.source}
+			</if>
+			<if test="bean.model.menu != null and bean.model.menu !=''">
+				AND P.MENU like '%'|| #{bean.model.menu} ||'%'
+			</if>
+			<if
+				test="bean.queryStartDateStr != null and bean.queryStartDateStr !=''">
+			 <![CDATA[ 	AND P.START_DATE >= TO_DATE(#{bean.queryStartDateStr},'yyyy-MM-dd hh24:mi:ss')]]>
+			</if>
+			<if
+				test="bean.queryEndDateStr != null and bean.queryEndDateStr !=''">
+			 <![CDATA[ 	AND P.END_DATE <= TO_DATE(#{bean.queryEndDateStr},'yyyy-MM-dd hh24:mi:ss')]]>
+			</if>
+			<if
+				test="bean.model.pubOperateType.operateTypeName != null and bean.model.pubOperateType.operateTypeName !='' and bean.model.pubOperateType.operateTypeName !='-1'">
+				AND L.OPERATE_TYPE = #{bean.model.pubOperateType.operateTypeName}
+			</if>
+			<if
+				test="bean.model.operateStatus != null and bean.model.operateStatus !='' and bean.model.operateStatus !='-1'">
+				AND P.OPERATE_STATUS = #{bean.model.operateStatus}
+			</if>
+		</trim>
+		<if
+			test="bean.sort != null and bean.sort != '' and bean.dir != null and bean.dir != ''">
+			<trim prefix="ORDER BY">
+			<![CDATA[${bean.sort} ${bean.dir}]]>
+			</trim>
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="com.springBootAdmin.system.entity.PubOperateLog">
+		INSERT INTO BP_OPERATE_LOG (
+			STAFF_ID, 
+			SOURCE,
+			MENU_NAME, 
+			START_DATE, 
+			OPERATE_TYPE, 
+			OPERATE_STATUS
+			<if test="notes !=null and notes !=''">,REMARK</if>
+		) VALUES (
+			#{staffId},
+			#{source},
+			#{menu}, 
+			NOW(), 
+			#{operateType}, 
+			#{operateStatus}
+			<if test="notes !=null and notes !=''">,#{notes}</if>
+		)
+		<selectKey keyProperty="operateId" order="AFTER" resultType="long">  
+	        SELECT LAST_INSERT_ID()  
+	    </selectKey> 
+	</insert>
+
+	<!-- 查询导出操作日志 -->
+	<select id="getListExportOperateLog" resultMap="BaseResultMap">
+		SELECT
+		<include refid="allFields" />
+		FROM GLCS_OPERATE_LOG P,GLCS_STAFF S,GLCS_OPERATE_TYPE L
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			S.STAFF_ID = P.STAFF_ID AND P.OPERATE_TYPE = L.OPERATE_TYPE
+			<if test="ids != null and ids != ''">
+				AND P.OPERATE_ID IN
+				<foreach collection="ids" index="index" item="ids" open="("
+					separator="," close=")">
+					#{ids}
+				</foreach>
+			</if>
+		</trim>
+		ORDER BY P.START_DATE DESC
+	</select>
+
+	<!-- 更新操作完成时间 -->
+	<update id="updateOperateLog">
+		UPDATE 
+			BP_OPERATE_LOG T
+		SET 
+			T.END_DATE = NOW(),
+			T.OPERATE_STATUS = #{status, jdbcType=INTEGER}
+		WHERE 
+			T.ID = #{operateId, jdbcType=BIGINT}
+	</update>
+
+	<!-- 查询操作类型 -->
+	<select id="getOperateTypeList" resultMap="OperateType">
+		select t.operate_type,t.operate_type_name from GLCS_OPERATE_TYPE t where
+		t.operate_type not in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</select>
+
+	<!-- 查询设备操作类型 -->
+	<select id="getEqpOperateTypeList" resultMap="OperateType">
+		select t.operate_type,t.operate_type_name from GLCS_OPERATE_TYPE t where
+		t.operate_type in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</select>
+
+	<!-- 根据Id查询操作类型名称 -->
+	<select id="getOperateTypeById" resultType="java.lang.String">
+		SELECT OPERATE_NAME FROM BP_OPERATE_TYPE WHERE OPERATE_TYPE = #{operateType}
+	</select>
+	
+	<!-- 操作日志NEW -->
+	<select id="pubOperateLog" parameterType="map" resultType="map">
+	SELECT P.OPERATE_ID,
+       S.NAME,
+       S.STAFF_NBR,
+       P.SOURCE,
+       P.MENU,
+       TO_CHAR(P.START_DATE,'YYYY-MM-DD HH24:mi:ss') START_DATE,
+       TO_CHAR(P.END_DATE,'YYYY-MM-DD HH24:mi:ss') END_DATE,
+       P.OPERATE_TYPE,
+       DECODE(P.OPERATE_STATUS,1,'成功',2,'失败',3,'操作中') OPERATE_STATUS,
+       L.OPERATE_TYPE_NAME,
+       P.NOTES
+  FROM GLCS_OPERATE_LOG P, GLCS_STAFF S, GLCS_OPERATE_TYPE L
+ where P.STAFF_ID = S.STAFF_ID
+   AND P.OPERATE_TYPE = L.OPERATE_TYPE
+and P.OPERATE_TYPE not in (114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+<if test="firstTime !=null and firstTime !=''">
+		  AND  P.START_DATE >=to_date('${firstTime}','YYYY-MM-DD')
+		</if>
+		<if test="lastTime !=null and lastTime !=''">
+		 AND   P.START_DATE &lt;=to_date('${lastTime}','YYYY-MM-DD')
+		</if>
+		<if test="staffNbr !=null and staffNbr !=''">
+		 AND   S.STAFF_NBR like '%${staffNbr}%'
+		</if>
+ORDER BY P.START_DATE DESC 
+	</select>
+
+	<!-- 查询操作日志 -->
+	<select id="selectAllOperateLog" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM GLCS_OPERATE_LOG where operate_type not in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</select>
+
+	<!-- 查询设备操作日志 -->
+	<select id="selectEqpOperateLog" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM GLCS_OPERATE_LOG where operate_type in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</select>
+
+	<!-- 插入操作日志到历史表 -->
+	<insert id="insertToHisOperateLog" parameterType="com.springBootAdmin.system.entity.PubOperateLog">
+		INSERT INTO HIS_PUB_OPERATE_LOG (OPERATE_ID, STAFF_ID, SOURCE,
+		MENU, START_DATE, END_DATE,
+		OPERATE_TYPE, OPERATE_STATUS, CREATE_TIME
+		)
+		VALUES (#{operateId,jdbcType=DECIMAL}, #{staffId,jdbcType=DECIMAL},
+		#{source,jdbcType=VARCHAR},
+		#{menu,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
+		#{operateType,jdbcType=DECIMAL}, #{operateStatus,jdbcType=DECIMAL},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- 删除操作日志 -->
+	<delete id="deleteOperateLog">
+		DELETE FROM GLCS_OPERATE_LOG where operate_type not in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</delete>
+
+	<!-- 删除设备操作日志 -->
+	<delete id="deleteEqpOperateLog">
+		DELETE FROM GLCS_OPERATE_LOG where operate_type in
+		(114,115,116,117,118,119,120,123,124,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142)
+	</delete>
+
+</mapper>

@@ -1,8 +1,8 @@
 package com.bananApple.annotation;
 
-import com.springBootAdmin.system.entity.PubOperateLog;
-import com.springBootAdmin.system.service.PubOperateLogService;
-import com.springBootAdmin.util.CheckMobile;
+import com.bananApple.system.entity.PubOperateLog;
+import com.bananApple.system.service.PubOperateLogService;
+import com.bananApple.util.CheckMobile;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class SaveOperateLogAspect {
 	private PubOperateLogService pubOperateLogService;
 
 	// Controller层切点
-	@Pointcut("@annotation(com.springBootAdmin.annotation.SaveOperateLog)")
+	@Pointcut("@annotation(com.bananApple.annotation.SaveOperateLog)")
 	public void saveOperateLog() {}
 
 	// 操作日志Id
@@ -41,7 +41,7 @@ public class SaveOperateLogAspect {
 	/**
 	 * @Description:前置通知记录用户操作记录日志
 	 */
-	@Before("within(com.springBootAdmin..controller..*) && @annotation(param))")
+	@Before("within(com.bananApple..controller..*) && @annotation(param))")
 	public void doBefore(JoinPoint joinPoint, SaveOperateLog param) throws IOException {
 		logger.info(">>>>>>>>>>>>>>前置通知开始>>>>>>>>>>>>>>");
 

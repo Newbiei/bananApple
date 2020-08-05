@@ -10,4 +10,5 @@ public class SysMenu {
     private String menuLevel;
     private String menuName;
     private String url;
+
 }

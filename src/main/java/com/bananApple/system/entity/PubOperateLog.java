@@ -1,4 +1,4 @@
-package com.bananApple.system.system.entity;
+package com.bananApple.system.entity;
 
 import java.util.Date;
 

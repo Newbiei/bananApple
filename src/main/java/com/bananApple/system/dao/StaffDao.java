@@ -1,4 +1,4 @@
-package com.bananApple.system.system.dao;
+package com.bananApple.system.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 

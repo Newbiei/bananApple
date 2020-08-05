@@ -1,4 +1,4 @@
-package com.bananApple.system.system.service.serviceImpl;
+package com.bananApple.system.service.serviceImpl;
 
 import com.springBootAdmin.system.dao.StaffDao;
 import com.springBootAdmin.system.service.StaffService;

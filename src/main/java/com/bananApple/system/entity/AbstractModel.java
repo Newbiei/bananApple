@@ -1,4 +1,4 @@
-package com.bananApple.system.system.entity;
+package com.bananApple.system.entity;
 
 
 import org.springframework.ui.Model;

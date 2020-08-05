@@ -1,4 +1,4 @@
-package com.bananApple.system.system.entity;
+package com.bananApple.system.entity;
 
 /**
  * @Description: 操作日志类型

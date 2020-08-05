@@ -1,4 +1,4 @@
-package com.bananApple.system.system.controller;
+package com.bananApple.system.controller;
 
 import com.springBootAdmin.annotation.SaveOperateLog;
 import com.springBootAdmin.system.service.StaffService;

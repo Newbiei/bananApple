@@ -1,10 +1,11 @@
 package com.bananApple.system.service;
 
-import com.bananApple.system.entity.SysMenu;
-import com.bananApple.system.entity.SysRole;
-import com.bananApple.system.entity.UserInfo;
+import com.springBootAdmin.system.entity.SysMenu;
+import com.springBootAdmin.system.entity.SysRole;
+import com.springBootAdmin.system.entity.SysStaff;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 
 public interface LoginService {
@@ -12,7 +13,7 @@ public interface LoginService {
     /**
      * 通过用户名查找用户
      */
-    UserInfo selectUserInfoByUsername(String username);
+    SysStaff selectUserInfoByUsername(String username);
 
     /**
      * 通过用户名查找角色列表
@@ -30,4 +31,18 @@ public interface LoginService {
      * @return
      */
     List<SysMenu> getMenuList(HttpServletRequest request);
+
+    /**
+     * 登录日志
+     * @param map
+     * @return
+     */
+    Integer addLoginLog(HashMap<String, Object> map);
+
+    /**
+     * 登出日志
+     * @param map
+     * @return
+     */
+    Integer updateLoginLog(HashMap<String, Object> map);
 }

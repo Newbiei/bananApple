@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bananApple.system.dao.LoginDao">
+<mapper namespace="com.springBootAdmin.system.dao.LoginDao">
 
-    <resultMap id="UserResult" type="UserInfo">
-        <result property="id" column="STAFF_ID" />
-        <result property="username" column="STAFF_NO" />
-        <result property="password" column="STAFF_PASS" />
+    <resultMap id="StaffResult" type="SysStaff">
+        <result property="staffId" column="STAFF_ID" />
+        <result property="staffNo" column="STAFF_NO" />
+        <result property="staffPass" column="STAFF_PASS" />
+        <result property="staffName" column="STAFF_NAME" />
+        <result property="realName" column="REAL_NAME" />
+        <result property="phone" column="PHONE" />
+        <result property="email" column="EMAIL" />
+        <result property="areaId" column="AREA_ID" />
+        <result property="areaName" column="AREA_NAME" />
+        <result property="staffCard" column="STAFF_CARD" />
+        <result property="staffType" column="STAFF_TYPE" />
+        <result property="departmentId" column="DEPARTMENT_ID" />
+        <result property="departmentName" column="DEPARTMENT_NAME" />
+        <result property="remark" column="REMARK" />
+        <result property="createOp" column="CREATE_OP" />
+        <result property="createDate" column="CREATE_DATE" />
+        <result property="updateOp" column="UPDATE_OP" />
+        <result property="updateDate" column="UPDATE_DATE" />
+        <result property="status" column="STATUS" />
     </resultMap>
 
     <resultMap id="RoleResult" type="SysRole">
@@ -22,8 +38,8 @@
     </resultMap>
 
     <!-- 通过用户名查找用户 -->
-    <select id="selectUserInfoByUsername" parameterType="String" resultMap="UserResult">
-        SELECT * FROM aa_staff t where t.staff_no = #{username} and t.status = 0 limit 1
+    <select id="selectUserInfoByUsername" parameterType="String" resultMap="StaffResult">
+        SELECT * FROM bp_staff t where t.staff_no = #{username} and t.status = 0 limit 1
     </select>
 
     <!-- 通过用户名查找角色列表-->
@@ -31,9 +47,9 @@
         SELECT
             *
         FROM
-            aa_role r
-            LEFT JOIN aa_staff_2_role sr ON sr.role_id = r.role_id
-            LEFT JOIN aa_staff s ON s.staff_id = sr.staff_id
+            bp_role r
+            LEFT JOIN bp_staff_2_role sr ON sr.role_id = r.role_id
+            LEFT JOIN bp_staff s ON s.staff_id = sr.staff_id
         WHERE
             s.staff_no = #{username}
             AND r.status = 0
@@ -44,8 +60,8 @@
         SELECT
             *
         FROM
-            aa_menu m
-            LEFT JOIN aa_role_2_menu rm ON rm.menu_id = m.menu_id
+            bp_menu m
+            LEFT JOIN bp_role_2_menu rm ON rm.menu_id = m.menu_id
         WHERE
             rm.role_id = #{id}
             AND m.STATUS = 0
@@ -60,14 +76,70 @@
             m.menu_name,
             m.url
         FROM
-            aa_staff s
-            LEFT JOIN aa_staff_2_role sr ON sr.staff_id = s.staff_id
-            LEFT JOIN aa_role_2_menu rm ON rm.role_id = sr.role_id
-            LEFT JOIN aa_menu m ON m.menu_id = rm.menu_id
+            bp_staff s
+            LEFT JOIN bp_staff_2_role sr ON sr.staff_id = s.staff_id
+            LEFT JOIN bp_role_2_menu rm ON rm.role_id = sr.role_id
+            LEFT JOIN bp_menu m ON m.menu_id = rm.menu_id
         WHERE
             s.staff_no = #{username}
             AND m.STATUS = 0
         ORDER BY
             m.menu_id
     </select>
+
+    <!-- 登录日志 -->
+    <insert id="addLoginLog" parameterType="map">
+        INSERT INTO bp_stafflogin_log (
+            login_date
+            <if test="staffId != null and staffId != ''">
+                ,staff_id
+            </if>
+            <if test="source != null and source != ''">
+                ,source
+            </if>
+            <if test="sessoinId != null and sessoinId != ''">
+                ,sessoin_id
+            </if>
+            <if test="clientIp != null and clientIp != ''">
+                ,client_ip
+            </if>
+            <if test="clientName != null and clientName != ''">
+                ,client_name
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                ,server_ip
+            </if>
+            <if test="stateId != null and stateId != ''">
+                ,state_id
+            </if>
+        ) VALUES (
+            NOW()
+            <if test="staffId != null and staffId != ''">
+                ,#{staffId}
+            </if>
+            <if test="source != null and source != ''">
+                ,#{source}
+            </if>
+            <if test="sessoinId != null and sessoinId != ''">
+                ,#{sessoinId}
+            </if>
+            <if test="clientIp != null and clientIp != ''">
+                ,#{clientIp}
+            </if>
+            <if test="clientName != null and clientName != ''">
+                ,#{clientName}
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                ,#{serverIp}
+            </if>
+            <if test="stateId != null and stateId != ''">
+                ,#{stateId}
+            </if>
+        )
+    </insert>
+
+    <!-- 登出日志 -->
+    <update id="updateLoginLog" parameterType="map">
+        UPDATE bp_stafflogin_log set state_id = 2, login_out_date = NOW() WHERE sessoin_id = #{sessoinId}
+    </update>
 </mapper>

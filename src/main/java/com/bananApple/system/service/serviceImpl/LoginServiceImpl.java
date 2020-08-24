@@ -1,10 +1,10 @@
 package com.bananApple.system.service.serviceImpl;
 
-import com.bananApple.system.dao.LoginDao;
-import com.bananApple.system.entity.SysMenu;
-import com.bananApple.system.entity.SysRole;
-import com.bananApple.system.entity.UserInfo;
-import com.bananApple.system.service.LoginService;
+import com.springBootAdmin.system.dao.LoginDao;
+import com.springBootAdmin.system.entity.SysMenu;
+import com.springBootAdmin.system.entity.SysRole;
+import com.springBootAdmin.system.entity.SysStaff;
+import com.springBootAdmin.system.service.LoginService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
     private LoginDao loginDao;
 
     @Override
-    public UserInfo selectUserInfoByUsername(String username) {
+    public SysStaff selectUserInfoByUsername(String username) {
         return loginDao.selectUserInfoByUsername(username);
     }
 
@@ -42,5 +42,15 @@ public class LoginServiceImpl implements LoginService {
         Map<String, Object> map = new HashMap<>();
         map.put("username", username);
         return loginDao.getMenuList(map);
+    }
+
+    @Override
+    public Integer addLoginLog(HashMap<String, Object> map) {
+        return loginDao.addLoginLog(map);
+    }
+
+    @Override
+    public Integer updateLoginLog(HashMap<String, Object> map) {
+        return loginDao.updateLoginLog(map);
     }
 }

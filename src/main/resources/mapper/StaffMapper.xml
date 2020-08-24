@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springBootAdmin.system.dao.StaffDao">
+
+    <resultMap id="StaffResult" type="SysStaff">
+        <result property="staffId" column="STAFF_ID" />
+        <result property="staffNo" column="STAFF_NO" />
+        <result property="staffPass" column="STAFF_PASS" />
+        <result property="staffName" column="STAFF_NAME" />
+        <result property="realName" column="REAL_NAME" />
+        <result property="phone" column="PHONE" />
+        <result property="email" column="EMAIL" />
+        <result property="areaId" column="AREA_ID" />
+        <result property="areaName" column="AREA_NAME" />
+        <result property="staffCard" column="STAFF_CARD" />
+        <result property="staffType" column="STAFF_TYPE" />
+        <result property="departmentId" column="DEPARTMENT_ID" />
+        <result property="departmentName" column="DEPARTMENT_NAME" />
+        <result property="remark" column="REMARK" />
+        <result property="createOp" column="CREATE_OP" />
+        <result property="createDate" column="CREATE_DATE" />
+        <result property="updateOp" column="UPDATE_OP" />
+        <result property="updateDate" column="UPDATE_DATE" />
+        <result property="status" column="STATUS" />
+    </resultMap>
+
+    <!-- 新增人员 -->
+    <insert id="addStaff" parameterType="map">
+        INSERT INTO bp_staff (
+        staff_no
+        ,status
+        <if test="staffName != null and staffName != ''">
+            ,staff_name
+        </if>
+        <if test="realName != null and realName != ''">
+            ,real_name
+        </if>
+        <if test="phone != null and phone != ''">
+            ,phone
+        </if>
+        ,area_id
+        ,staff_pass
+        <if test="staffCard != null and staffCard != ''">
+            ,staff_card
+        </if>
+        <if test="staffType != null and staffType != ''">
+            ,staff_type
+        </if>
+        <if test="departmentId != null and departmentId != ''">
+            ,department_id
+        </if>
+        <if test="remark != null and remark != ''">
+            ,remark
+        </if>
+        <if test="createOp != null and createOp != ''">
+            ,create_op
+        </if>
+        ,create_date
+        <if test="email != null and email != ''">
+            ,email
+        </if>
+        ) VALUES (
+        #{staffNo}
+        ,0
+        <if test="staffName != null and staffName != ''">
+            ,#{staffName}
+        </if>
+        <if test="realName != null and realName != ''">
+            ,#{realName}
+        </if>
+        <if test="phone != null and phone != ''">
+            ,#{phone}
+        </if>
+        ,#{areaId}
+        ,#{staffPass}
+        <if test="staffCard != null and staffCard != ''">
+            ,#{staffCard}
+        </if>
+        <if test="staffType != null and staffType != ''">
+            ,#{staffType}
+        </if>
+        <if test="departmentId != null and departmentId != ''">
+            ,#{departmentId}
+        </if>
+        <if test="remark != null and remark != ''">
+            ,#{remark}
+        </if>
+        <if test="createOp != null and createOp != ''">
+            ,#{createOp}
+        </if>
+        ,NOW()
+        <if test="email != null and email != ''">
+            ,#{email}
+        </if>
+        )
+    </insert>
+
+    <!-- 逻辑删除人员 -->
+    <update id="deleteStaff" parameterType="map">
+        update bp_staff set status = 1 where staff_id = #{staffId}
+    </update>
+
+    <!-- 查询人员 -->
+    <select id="queryStaff" parameterType="map" resultType="map">
+        SELECT
+        ys.STAFF_ID,
+        ys.STAFF_NO,
+        ys.STAFF_NAME,
+        ys.REAL_NAME,
+        ya.AREA_NAME,
+        ysd.DEPARTMENT_NAME,
+        ys.PHONE,
+        ys.STAFF_CARD,
+        ys.EMAIL,
+        CASE ys.STAFF_TYPE
+        WHEN 1 THEN
+        '移动'
+        WHEN 2 THEN
+        '电信'
+        WHEN 3 THEN
+        '铁塔'
+        WHEN 4 THEN
+        '联通'
+        ELSE ''
+        END AS STAFF_TYPE,
+        ys1.STAFF_NAME CREATE_OP,
+        DATE_FORMAT(ys.CREATE_DATE,'%Y-%m-%d %H:%I:%S') CREATE_DATE,
+        ys2.STAFF_NAME UPDATE_OP,
+        DATE_FORMAT(ys.UPDATE_DATE,'%Y-%m-%d %H:%I:%S') UPDATE_DATE
+        FROM bp_staff ys
+        LEFT JOIN bp_area ya ON ya.area_id = ys.area_id
+        LEFT JOIN bp_staff_department ysd ON ysd.department_id = ys.department_id
+        LEFT JOIN bp_staff ys1 ON ys1.staff_id = ys.create_op
+        LEFT JOIN bp_staff ys2 ON ys2.staff_id = ys.update_op
+        WHERE ys.status = 0
+        <if test="staffNo != null and staffNo != ''">
+            and ys.staff_no = #{staffNo}
+        </if>
+        <if test="staffName != null and staffName != ''">
+            and ys.staff_name like '%${staffName}%'
+        </if>
+        <if test="realName != null and realName != ''">
+            and ys.real_name like '%${realName}%'
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and ys.area_id in (select area_id from bp_area where parent_area_id = #{areaId} or area_id = #{areaId})
+        </if>
+        <if test="staffType != null and staffType != ''">
+            and ys.staff_type = #{staffType}
+        </if>
+        <if test="departmentId != null and departmentId != ''">
+            and ys.department_id = #{departmentId}
+        </if>
+    </select>
+
+    <!-- 通过id查人员信息 -->
+    <select id="getStaffById" parameterType="String" resultType="map">
+        SELECT
+            ys.STAFF_ID,
+            ys.STAFF_NO,
+            ys.STAFF_NAME,
+            ys.REAL_NAME,
+            ys.AREA_ID,
+            ys.PHONE,
+            ys.STAFF_CARD,
+            ys.EMAIL,
+            ys.AREA_ID,
+            ys.STAFF_PASS,
+            ys.STAFF_TYPE,
+            ys.DEPARTMENT_ID,
+            ys.POSITION_ID,
+            ys.REMARK,
+            ys.STATUS
+        FROM bp_staff ys
+        WHERE ys.STAFF_ID = #{staffId}
+    </select>
+
+    <!-- 更新人员 -->
+    <update id="updateStaff" parameterType="map">
+        UPDATE bp_staff SET
+        <if test="staffNo != null and staffNo != ''">
+            staff_no = #{staffNo}
+        </if>
+        <if test="staffName != null and staffName != ''">
+            ,staff_name = #{staffName}
+        </if>
+        <if test="realName != null and realName != ''">
+            ,real_name = #{realName}
+        </if>
+        <if test="status != null and status != ''">
+            ,status = #{status}
+        </if>
+        <if test="phone != null and phone != ''">
+            ,phone = #{phone}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            ,area_id = #{areaId}
+        </if>
+        <if test="staffPass != null and staffPass != ''">
+            ,staff_pass = #{staffPass}
+        </if>
+        <if test="staffCard != null and staffCard != ''">
+            ,staff_card = #{staffCard}
+        </if>
+        <if test="email != null and email != ''">
+            ,email = #{email}
+        </if>
+        <if test="staffType != null and staffType != ''">
+            ,staff_type = #{staffType}
+        </if>
+        <if test="departmentId != null and departmentId != ''">
+            ,department_id = #{departmentId}
+        </if>
+        <if test="positionId != null and positionId != ''">
+            ,position_id = #{positionId}
+        </if>
+        <if test="remark != null and remark != ''">
+            ,remark = #{remark}
+        </if>
+        <if test="updateOp != null and updateOp != ''">
+            ,update_op = #{updateOp}
+        </if>
+        ,update_date = NOW()
+        WHERE staff_id = #{staffId}
+    </update>
+
+    <!-- 角色赋权到某人员 -->
+    <insert id="addStaffRole" parameterType="map">
+        insert into bp_staff_2_role
+        (staff_id, role_id, create_op, create_date)
+        values
+        (#{staffId}, #{roleId}, #{createOp}, NOW())
+    </insert>
+
+    <!-- 删除某人员的所有角色 -->
+    <delete id="deleteStaffRole" parameterType="String">
+        delete from bp_staff_2_role where staff_id = #{staffId}
+    </delete>
+
+    <!-- 查询某人有的角色id -->
+    <select id="queryStaffRole" parameterType="String" resultType="map">
+        select role_id from bp_staff_2_role where staff_id = #{staffId}
+    </select>
+</mapper>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>班组管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" href="/layuiAdmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiAdmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/easyui-1.7/themes/material/easyui.css">
+    <link rel="stylesheet" href="/easyui-1.7/themes/icon.css">
+</head>
+<style>
+    <!--清除layui原有的下边的内边距-->
+    .layui-card-header.layuiadmin-card-header-auto {
+        padding-bottom: 0;
+    }
+</style>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-xs3">
+                        <label class="layui-form-label" style="padding: 9px 10px">班组名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="departmentName" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">地区:</label>-->
+<!--                        <div class="citys " id="areaName" style="">-->
+<!--                            <select lay-verify="required" style="width: 34%; float: left;" name="province"></select>-->
+<!--                            <select class="city-select" style="width: 33%; float: left;" name="city"></select>-->
+<!--                            <select class="city-select" style="width: 33%; float: left;" name="area"></select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="layui-inline layui-col-xs3">
+                        <label class="layui-form-label" style="padding: 9px 10px">用户类型</label>
+                        <div class="layui-input-block">
+                            <select id="staffType" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label for="area" class="layui-form-label">地区:</label>
+                        <div class="citys layui-inline" id="areaName">
+                            <select class="city-select" name="province"></select>
+                            <select class="city-select" name="city"></select>
+                            <select class="city-select" name="area"></select>
+                        </div>
+                    </div>
+<!--                    <form class="layui-form layui-inline">-->
+<!--                        <div class="layui-inline">-->
+<!--                            <label for="area" class="layui-form-label">地区:</label>-->
+<!--                            <div class="citys layui-inline" id="areaName">-->
+<!--                                <select class="city-select" name="province"></select>-->
+<!--                                <select class="city-select" name="city"></select>-->
+<!--                                <select class="city-select" name="area"></select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                </div>
+            </div>
+
+
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn" onclick="addStaffDepartment()">添加</button>
+                    <button class="layui-btn" onclick="delDepartment()">删除</button>
+                    <button class="layui-btn" onclick="updDepartment()">修改</button>
+                    <button class="layui-btn" onclick="query_staff_department()">查询</button>
+                </div>
+
+                <table id="dg"></table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/layuiAdmin/layui/layui.js"></script>
+    <script type="text/javascript" src="/easyui-1.7/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui-1.7/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/jquery-citys.js"></script>
+<!--    <script th:inline="javascript">-->
+
+<!--    </script>-->
+
+
+    <script th:inline="javascript">
+
+        $(function() {
+            query_staff_department();
+            selStaffType();
+
+        });
+        var sessionAreaId=[[${session.areaId}]]
+        var loginAreaId = "";
+        if (sessionAreaId != null) {
+            loginAreaId = sessionAreaId;
+        }
+
+        // 查询班组中用户的类型
+        function selStaffType() {
+            var staffType = $("#staffType");
+            $.ajax({
+                url: "/staffDepartment/selStaffType",
+                type: 'post',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    $.each(data, function (index, stt) {
+                        staffType.append("<option value=" + stt.l + ">" + stt.staffTypeName + "</option>");
+                    });
+                    $('#areaName').citys({code: loginAreaId});
+                }
+            });
+
+        }
+
+        // 想要使用layui的下拉框就要加载form模块
+        layui.use('form', function(){
+            var form = layui.form;
+        });
+
+        // 查询班组的信息
+        function query_staff_department() {
+            // 获取要传入文本框和下拉框的值
+            var obj = {
+                departmentName: $('#departmentName').val(),
+                staffType: $('#staffType').val(),
+                // areaId: $('#areaName').getAreaId('areaName')
+            };
+            // alert(areaId)
+            // 使用easyui的数据表格发送请求并根据返回数据生成数据表格
+            $('#dg').datagrid({
+                url: "/staffDepartment/queryStaffDepartment",
+                striped: true, 		// 奇偶行使用不同背景色
+                pagination: true,	// 分页工具栏
+                rownumbers: true,	// 初始化页码
+                pageSize: 20,
+                pageList: [10, 20, 30, 40, 50],
+                singleSelect: true,	// 单选
+                fitColumns: true,	// 自适应表格宽度
+                sync: false,
+                queryParams: obj,
+                method: "post",
+                columns: [
+                    [
+                        {field: 'DEPARTMENT_ID', title: '班组id', align: 'center', checkbox: true},
+                        {field: 'DEPARTMENT_NAME', title: '班组名称', width: '10%', align: 'center'},
+                        {field: 'AREA_NAME', title: '地区id', align: 'center'},
+                        {field: 'STAFF_TYPE', title: '用户类型', align: 'center'},
+                        {field: 'CREATE_OP', title: '创建人', align: 'center'},
+                        {field: 'CREATE_DATE', title: '创建日期', align: 'center'},
+                        {field: 'UPDATE_OP', title: '修改人', align: 'center'},
+                        {field: 'UPDATE_DATE', title: '修改时间', align: 'center'},
+                        {field: 'REMARK', title: '备注', hidden: true}
+                    ]
+                ]
+            });
+        }
+
+        // 班组的添加
+        function addStaffDepartment() {
+            layer.open({
+                type: 2,
+                shade:[0.8, '#969696'],
+                area:['50%','90%'],
+                // scrollbar: true,
+                skin:'layui-layer-molv',
+                title: ['新增', 'text-align:center;'],
+                content: '/staffDepartment/jumpStaffDepartmentAdd'
+            });
+        }
+
+        // 班组的删除（修改班组的状态）
+        function delDepartment() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row == null) {
+                layer.msg('请选择一条数据');
+                return;
+            }
+
+            layer.confirm('确定删除吗？', {
+                btn : ['确定','取消'],
+                btn1 : function(){
+                    var data = {
+                        departmentId : row.DEPARTMENT_ID
+                    };
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "/staffDepartment/delStaffDepartmentById",
+                        data: data,
+                        success: function (result) {
+                            if (result == 1) {
+                                layer.msg('删除成功');
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                            query_staff_department();
+                        },
+                        error : function() {
+                            layer.msg('网络异常');
+                        }
+                    });
+                }
+            });
+        }
+        
+        // 班组的修改
+        function updDepartment() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row == null) {
+                layer.msg('请选择一条数据');
+                return;
+            }
+            layer.open({
+                type: 2,
+                shade:[0.8, '#969696'],
+                area:['50%','95%'],
+                skin:'layui-layer-molv',
+                title: ['修改', 'text-align:center;'],
+                content: '/staffDepartment/updDepartmentView?departmentId=' + row.DEPARTMENT_ID
+            });
+        }
+    </script>
+</body>
+</html>

@@ -3,8 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <title>人员管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" href="/layuiAdmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiAdmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/easyui-1.7/themes/material/easyui.css">
+    <link rel="stylesheet" href="/easyui-1.7/themes/icon.css">
 </head>
 <body>
-人员管理
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="staffNo" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="staffName" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">真实姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="realName" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn" onclick="add()">添加</button>
+                    <button class="layui-btn" onclick="del()">删除</button>
+                    <button class="layui-btn" onclick="upd()">修改</button>
+                    <button class="layui-btn" onclick="que()">查询</button>
+                </div>
+
+                <table id="dg"></table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/layuiAdmin/layui/layui.js"></script>
+    <script type="text/javascript" src="/easyui-1.7/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui-1.7/locale/easyui-lang-zh_CN.js"></script>
+    <script>
+
+        $(function() {
+            que();
+        });
+
+        // 添加
+        function add() {
+            layui.use('layer', function () {
+                layer.open({
+                    type: 2
+                    ,title: '添加'
+                    ,content: '/staff/add'
+                    ,maxmin: true
+                    ,area: ['500px', '600px']
+                });
+            });
+        }
+
+        // 查询
+        function que() {
+            var obj = {
+                staffNo : $('#staffNo').val(),
+                staffName : $('#staffName').val(),
+                realName : $('#realName').val(),
+                staffType : $('#staffType').val()
+            };
+            $('#dg').datagrid({
+                url: "/staff/queryStaff",
+                striped: true, 		// 奇偶行使用不同背景色
+                pagination: true,	// 分页工具栏
+                rownumbers: true,	// 初始化页码
+                pageSize: 20,
+                pageList: [10,20,30,40,50],
+                singleSelect: true,	// 单选
+                fitColumns: true,	// 自适应表格宽度
+                sync: false,
+                queryParams: obj,
+                method: "post",
+                columns: [ [
+                    {field: 'STAFF_ID', title: '用户id', align: 'center', checkbox: true},
+                    {field: 'STAFF_NO', title: '用户编号', width: '7%', align: 'center'},
+                    {field: 'STAFF_NAME', title: '用户名', width: '7%', align: 'center'},
+                    {field: 'AREA_NAME', title: '地区', width: '7%', align: 'center'},
+                    {field: 'STAFF_TYPE', title: '用户类型', width: '7%', align: 'center'},
+                    {field: 'REAL_NAME', title: '真实姓名', width: '7%', align: 'center'},
+                    {field: 'PHONE', title: '手机号', width: '10%', align: 'center'},
+                    {field: 'STAFF_CARD', title: '身份证号', width: '10%', align: 'center'},
+                    {field: 'EMAIL', title: '邮箱', width: '10%', align: 'center'},
+                    {field: 'DEPARTMENT_NMAE', title: '班组', width: '7%', align: 'center'},
+                    {field: 'CREATE_OP', title: '创建人', width: '7%', align: 'center'},
+                    {field: 'CREATE_DATE', title: '创建日期', width: '10%', align: 'center'},
+                    {field: 'UPDATE_OP', title: '修改人', width: '7%', align: 'center'},
+                    {field: 'UPDATE_DATE', title: '修改日期', width: '10%', align: 'center'},
+                    {field: 'REMARK', title: '备注', width: '10%', hidden: true}
+                ] ]
+            });
+        }
+
+        layui.config({
+            base: 'layuiAdmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'layer'], function() {
+            var $ = layui.$
+                ,layer = layui.layer;
+
+            //事件
+            var active = {
+                del: function () {
+                    var checkStatus = table.checkStatus('tt')
+                        ,checkData = checkStatus.data; //得到选中的数据
+
+                    if(checkData.length === 0){
+                        return layer.msg('请选择数据');
+                    }
+
+                    layer.confirm('确定删除吗？', function(index) {
+
+                        table.reload('tt');
+                        layer.msg('已删除');
+                    });
+                }
+            };
+        });
+
+    </script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springBootAdmin.system.dao.StaffDepartmentDao">
+    <!-- 首页查询全部的班组信息 -->
+    <select id="selStaffDepartmentAll" parameterType="map" resultType="map">
+        SELECT
+            bsd.DEPARTMENT_ID,
+            bsd.DEPARTMENT_NAME,
+            ba.AREA_NAME,
+            CASE bsd.STAFF_TYPE
+            WHEN 1 THEN
+            '移动'
+            WHEN 2 THEN
+            '电信'
+            WHEN 3 THEN
+            '铁塔'
+            WHEN 4 THEN
+            '联通'
+            ELSE ''
+            END AS STAFF_TYPE,
+            bs.STAFF_NAME CREATE_OP,
+            DATE_FORMAT(bsd.CREATE_DATE,'%Y-%m-%d %H:%I:%S') CREATE_DATE,
+            bs2.STAFF_NAME UPDATE_OP,
+            DATE_FORMAT(bsd.UPDATE_DATE,'%Y-%m-%d %H:%I:%S') UPDATE_DATE,
+            bsd.REMARK
+        FROM bp_staff_department bsd
+        LEFT JOIN bp_area ba ON bsd.area_id = ba.area_id
+        LEFT JOIN bp_staff bs ON bs.staff_id = bsd.create_op
+        LEFT JOIN bp_staff bs2 ON bs2.staff_id = bsd.update_op
+        WHERE bsd.status = 0
+        <if test="departmentName != null and departmentName != ''">
+            and bsd.DEPARTMENT_NAME like "%"#{departmentName}"%"
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and bsd.area_id in (select area_id from bp_area where parent_area_id = #{areaId} or area_id = #{areaId})
+        </if>
+        <if test="staffType != null and staffType != ''">
+            and bsd.staff_type = #{staffType}
+        </if>
+    </select>
+
+    <!--添加班组信息-->
+    <insert id="addStaffDepartment" parameterType="java.util.Map">
+        insert into bp_staff_department(
+            DEPARTMENT_NAME,
+            STAFF_TYPE,
+            CREATE_OP,
+            CREATE_DATE,
+            UPDATE_OP,
+            UPDATE_DATE,
+            STATUS,
+            REMARK
+        )
+        values(
+            #{departmentName},
+            #{staffType},
+            #{createOp},
+            NOW(),
+            #{updateOp},
+            NOW(),
+            #{status},
+            #{remark}
+        )
+    </insert>
+
+    <!--根据班组id删除班组信息（修改班组的状态）-->
+    <update id="delStaffDepartmentById" parameterType="java.lang.String">
+        update bp_staff_department
+        set status=1
+        where DEPARTMENT_ID =#{departementId}
+    </update>
+
+    <!--查询班组中所有的用户类型-->
+    <select id="selStaffType" resultType="java.lang.Integer">
+        select distinct STAFF_TYPE from bp_staff_department order by STAFF_TYPE
+    </select>
+
+    <!--根据id查询班组信息-->
+    <select id="selDepartmentById" resultType="java.util.Map" parameterType="java.lang.String">
+        select * from bp_staff_department where DEPARTMENT_ID = #{departmentId}
+    </select>
+
+    <!--根据班组id修改班组信息-->
+    <update id="updDepartmentById" parameterType="java.util.Map">
+        update bp_staff_department
+        set
+            DEPARTMENT_NAME = #{departmentName},
+            STAFF_TYPE = #{staffType},
+            UPDATE_OP = #{updateOp},
+            UPDATE_DATE = NOW(),
+            STATUS = #{status}
+            <if test="remark != null and remark != ''">
+                ,REMARK = #{remark}
+            </if>
+
+        where DEPARTMENT_ID = #{departmentId}
+    </update>
+</mapper>

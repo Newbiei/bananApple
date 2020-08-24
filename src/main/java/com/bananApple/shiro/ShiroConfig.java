@@ -33,19 +33,19 @@ public class ShiroConfig {
         // 配置不会被拦截的链接 顺序判断
         map.put("/welcome", "anon");
         map.put("/poeCharts", "anon");
+        map.put("/surprise", "anon");
         map.put("/getUUEInfo", "anon");
 
         map.put("/css/**", "anon");
         map.put("/images/**", "anon");
         map.put("/js/**", "anon");
         map.put("/layuiAdmin/**", "anon");
-        map.put("/layuimini/**", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         map.put("/favicon.ico","anon");
         map.put("/logout", "logout");
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问;
         // user:认证通过或者记住了登录状态(remeberMe)则可以通过
-        map.put("/**", "authc");
+//        map.put("/**", "authc");
         bean.setFilterChainDefinitionMap(map);
 
         bean.setLoginUrl("/login");

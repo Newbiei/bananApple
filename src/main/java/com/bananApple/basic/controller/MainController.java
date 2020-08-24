@@ -42,6 +42,11 @@ public class MainController {
         return "markdown";
     }
 
+    @RequestMapping("/surprise")
+    public String surprise () {
+        return "surprise";
+    }
+
     @ResponseBody
     @RequestMapping("/getInfo")
     public String getInfo (HttpServletRequest request) {

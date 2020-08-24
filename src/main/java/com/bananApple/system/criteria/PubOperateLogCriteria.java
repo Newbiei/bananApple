@@ -1,6 +1,6 @@
 package com.bananApple.system.criteria;
 
-import com.springBootAdmin.system.entity.PubOperateLog;
+import com.bananApple.system.entity.PubOperateLog;
 
 public class PubOperateLogCriteria extends AbstractQueryCriteria<PubOperateLog> {
 

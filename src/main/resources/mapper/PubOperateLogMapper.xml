@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.springBootAdmin.system.dao.PubOperateLogDao">
+<mapper namespace="com.bananApple.system.dao.PubOperateLogDao">
 
-	<resultMap id="BaseResultMap" type="com.springBootAdmin.system.entity.PubOperateLog">
+	<resultMap id="BaseResultMap" type="com.bananApple.system.entity.PubOperateLog">
 		<id column="OPERATE_ID" property="operateId" jdbcType="DECIMAL" />
 		<result column="STAFF_ID" property="staffId" jdbcType="DECIMAL" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
@@ -19,7 +19,7 @@
 	</resultMap>
 	
 	<!-- 操作类型结果集 -->
-	<resultMap id="OperateType" type="com.springBootAdmin.system.entity.PubOperateType">
+	<resultMap id="OperateType" type="com.bananApple.system.entity.PubOperateType">
 		<result column="OPERATE_TYPE" property="operateType" jdbcType="DECIMAL" />
 		<result column="OPERATE_TYPE_NAME" property="operateTypeName" jdbcType="VARCHAR" />
 	</resultMap>
@@ -125,7 +125,7 @@
 		</if>
 	</select>
 
-	<insert id="insert" parameterType="com.springBootAdmin.system.entity.PubOperateLog">
+	<insert id="insert" parameterType="com.bananApple.system.entity.PubOperateLog">
 		INSERT INTO BP_OPERATE_LOG (
 			STAFF_ID, 
 			SOURCE,
@@ -242,7 +242,7 @@ ORDER BY P.START_DATE DESC
 	</select>
 
 	<!-- 插入操作日志到历史表 -->
-	<insert id="insertToHisOperateLog" parameterType="com.springBootAdmin.system.entity.PubOperateLog">
+	<insert id="insertToHisOperateLog" parameterType="com.bananApple.system.entity.PubOperateLog">
 		INSERT INTO HIS_PUB_OPERATE_LOG (OPERATE_ID, STAFF_ID, SOURCE,
 		MENU, START_DATE, END_DATE,
 		OPERATE_TYPE, OPERATE_STATUS, CREATE_TIME

@@ -1,8 +1,8 @@
 package com.bananApple.system.dao;
 
-import com.springBootAdmin.system.criteria.PubOperateLogCriteria;
-import com.springBootAdmin.system.entity.PubOperateLog;
-import com.springBootAdmin.system.entity.PubOperateType;
+import com.bananApple.system.criteria.PubOperateLogCriteria;
+import com.bananApple.system.entity.PubOperateLog;
+import com.bananApple.system.entity.PubOperateType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

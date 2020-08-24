@@ -1,8 +1,8 @@
 package com.bananApple.system.dao;
 
-import com.springBootAdmin.system.entity.SysMenu;
-import com.springBootAdmin.system.entity.SysRole;
-import com.springBootAdmin.system.entity.SysStaff;
+import com.bananApple.system.entity.SysMenu;
+import com.bananApple.system.entity.SysRole;
+import com.bananApple.system.entity.SysStaff;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;

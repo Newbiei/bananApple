@@ -1,6 +1,6 @@
 package com.bananApple.listener;
 
-import com.springBootAdmin.system.service.LoginService;
+import com.bananApple.system.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

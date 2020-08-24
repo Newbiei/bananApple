@@ -1,7 +1,7 @@
 package com.bananApple.system.controller;
 
-import com.springBootAdmin.system.service.StaffDepartmentService;
-import com.springBootAdmin.util.MyUtil;
+import com.bananApple.system.service.StaffDepartmentService;
+import com.bananApple.util.MyUtil;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

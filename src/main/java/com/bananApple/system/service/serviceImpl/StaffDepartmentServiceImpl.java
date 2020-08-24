@@ -1,7 +1,7 @@
 package com.bananApple.system.service.serviceImpl;
 
-import com.springBootAdmin.system.dao.StaffDepartmentDao;
-import com.springBootAdmin.system.service.StaffDepartmentService;
+import com.bananApple.system.dao.StaffDepartmentDao;
+import com.bananApple.system.service.StaffDepartmentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

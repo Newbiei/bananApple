@@ -1,8 +1,8 @@
 package com.bananApple.system.service;
 
-import com.springBootAdmin.system.entity.SysMenu;
-import com.springBootAdmin.system.entity.SysRole;
-import com.springBootAdmin.system.entity.SysStaff;
+import com.bananApple.system.entity.SysMenu;
+import com.bananApple.system.entity.SysRole;
+import com.bananApple.system.entity.SysStaff;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
